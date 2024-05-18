@@ -11,12 +11,17 @@ This project is developed for the Big Data Management Systems course at CEID for
 - Apache Kafka
 - Apache Spark
 - MongoDB
-- [UXSim GitHub](https://github.com/toruseo/UXsim)
+- UXSim [(GitHub)](https://github.com/toruseo/UXsim)
+- Docker
 
 ## Python Modules
 
 - UXSIM
 - ipykernel
+
+## Docker Images
+
+- wurstmeister/kafka:latest (Kafka)
 
 ## Code Editor
 
@@ -44,3 +49,30 @@ The project comprises three sets of deliverables:
    - Implement an Apache Spark application to perform real-time processing on the incoming data from the Kafka broker.
 3. **Storage in NoSQL Database:**
    - Store both raw data and their processed form (by Spark) in a MongoDB implementation.
+
+## Docker Setup
+
+### Kafka
+
+1. **Change Directory to Kafka Directory:**
+
+   ```bash
+   cd /kafka
+   ```
+
+2. **Build Docker Image:**
+
+   ```bash
+   docker build -t bdp-kafka .
+   ```
+
+3. **Run Docker Container:**
+   ```bash
+   docker run -d --name bdp-kafka-container bdp-kafka
+   ```
+
+> **Tip:** To interact with the Apache Kafka container, use the following command:
+>
+> ```bash
+> docker run -d --name bdp-kafka-container bdp-kafka
+> ```
