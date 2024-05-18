@@ -1,0 +1,6 @@
+FROM wurstmeister/kafka:latest
+
+ENV KAFKA_ZOOKEEPER_CONNECT=bdp-zookeeper-container:2181
+ENV KAFKA_LISTENERS=PLAINTEXT://:9092
+
+EXPOSE 9092
