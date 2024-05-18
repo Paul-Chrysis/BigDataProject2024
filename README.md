@@ -24,7 +24,6 @@ This project is developed for the Big Data Management Systems course at CEID for
 - wurstmeister/kafka:latest (Kafka)
 - confluentinc/cp-zookeeper:latest (Zookeeper)
 
-
 ## Code Editor
 
 - Visual Studio Code
@@ -98,7 +97,7 @@ This project is developed for the Big Data Management Systems course at CEID for
 3. **Run Docker Container:**
 
    ```bash
-   docker run -d --name bdp-kafka-container --network bdp-network bdp-kafka
+   docker run -d --name bdp-kafka-container --network bdp-network -p 9092:9092 bdp-kafka
    ```
 
 > **Tip:** To interact with the Apache Kafka container, use the following command:
