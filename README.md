@@ -11,7 +11,8 @@ This project is developed for the Big Data Management Systems course at CEID for
 - Apache Kafka
 - Apache Spark
 - MongoDB
-- [UXSim GitHub](https://github.com/toruseo/UXsim)
+- UXSim [(GitHub)](https://github.com/toruseo/UXsim)
+- Docker
 
 ## Python Modules
 
@@ -22,6 +23,7 @@ This project is developed for the Big Data Management Systems course at CEID for
 
 - wurstmeister/kafka:latest (Kafka)
 - confluentinc/cp-zookeeper:latest (Zookeeper)
+
 
 ## Code Editor
 
@@ -94,6 +96,7 @@ This project is developed for the Big Data Management Systems course at CEID for
    ```
 
 3. **Run Docker Container:**
+
    ```bash
    docker run -d --name bdp-kafka-container --network bdp-network bdp-kafka
    ```
