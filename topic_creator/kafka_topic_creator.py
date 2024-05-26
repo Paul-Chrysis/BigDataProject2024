@@ -5,7 +5,7 @@ from kafka.errors import TopicAlreadyExistsError
 bootstrap_servers = 'localhost:9092'
 
 topic_name = 'vehicle_positions'
-num_partitions = 3
+num_partitions = 1
 replication_factor = 1
 
 admin_client = KafkaAdminClient(bootstrap_servers=bootstrap_servers)
