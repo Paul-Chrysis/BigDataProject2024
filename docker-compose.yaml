@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  zookeeper:
+    build:
+      context: ./zookeeper
+      dockerfile: dockerfile
+    container_name: bdp-zookeeper-container
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+    ports:
+      - "2181:2181"
+    networks:
+      - bdp-network
+
+  kafka:
+    build:
+      context: ./kafka
+      dockerfile: dockerfile
+    container_name: bdp-kafka-container
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "9093:9023"
+    networks:
+      - bdp-network
+
+  spark:
+    build:
+      context: ./spark
+      dockerfile: dockerfile
+    container_name: bdp-spark-container
+    depends_on:
+      - kafka
+    volumes:
+      - ./spark/spark_consumer/spark_consumer.py:/opt/spark-apps/spark_consumer.py
+    networks:
+      - bdp-network
+
+networks:
+  bdp-network:
+    driver: bridge
