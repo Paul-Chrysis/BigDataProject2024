@@ -18,15 +18,21 @@ This project is developed for the Big Data Management Systems course at CEID for
 
 - UXSIM
 - ipykernel
+- schedule
+- pandas
+- datetime
+- pyspark
 
 ## Docker Images
 
 - wurstmeister/kafka:latest (Kafka)
 - confluentinc/cp-zookeeper:latest (Zookeeper)
+- bitnami/spark:latest (Spark)
 
-## Code Editor
+## Tools used
 
 - Visual Studio Code
+- Offset Explorer 3.0
 
 ### Extensions
 
@@ -57,10 +63,10 @@ This project is developed for the Big Data Management Systems course at CEID for
 
 ### Zookeeper setup
 
-1. **Change Directory to Zookeeper Directory:**
+1. **Change Working Directory to Zookeeper Directory:**
 
    ```bash
-   cd /zookeeper
+   cd ./zookeeper
    ```
 
 2. **Build Docker Image:**
@@ -74,18 +80,12 @@ This project is developed for the Big Data Management Systems course at CEID for
    docker run -d --name bdp-zookeeper-container --network bdp-network bdp-zookeeper
    ```
 
-> **Tip:** To interact with the Apache Zookeeper container, use the following command:
->
-> ```bash
-> docker exec -it bdp-zookeper-container bash
-> ```
-
 ### Kafka setup
 
-1. **Change Directory to Kafka Directory:**
+1. **Change Working Directory to Kafka Directory:**
 
    ```bash
-   cd /kafka
+   cd ./kafka
    ```
 
 2. **Build Docker Image:**
@@ -97,13 +97,57 @@ This project is developed for the Big Data Management Systems course at CEID for
 3. **Run Docker Container:**
 
    ```bash
-   docker run -d --name bdp-kafka-container --network bdp-network -p 9092:9092 bdp-kafka
+   docker run -d --name bdp-kafka-container --network bdp-network -p 9092:9092 -p 9093:9093 bdp-kafka
    ```
 
-> **Tip:** To interact with the Apache Kafka container, use the following command:
+### Topic Creation setup
+
+1. **Change Working Directory to topic_creator:**
+   ```bash
+   cd ./topic_creator
+   ```
+1. **Run kafka_topic_creator python script**
+   ```bash
+   python ./kafka_topic_creator.py
+   ```
+
+### Spark setup
+
+1. **Change Working Directory to Spark Directory:**
+
+   ```bash
+   cd ./spark
+   ```
+
+2. **Build Docker Image:**
+
+   ```bash
+   docker build -t bdp-spark .
+   ```
+
+3. **Run Docker Container:**
+
+   ```bash
+   docker run -d --name bdp-spark-container --network bdp-network bdp-spark
+   ```
+
+### Message Creation setup
+
+1. **Change Working Directory to message producer:**
+   ```bash
+   cd ./message_producer
+   ```
+2. **Run message_producer python script**
+   ```bash
+   python ./message_producer.py
+   ```
+
+### Additional Tips
+
+> **Tip:** To interact with a service container, use the following command:
 >
 > ```bash
-> docker exec -it bdp-kafka-container bash
+> docker exec -it bdp-{service}-container bash
 > ```
 
 > **Tip:** To remove a container:
@@ -112,3 +156,37 @@ This project is developed for the Big Data Management Systems course at CEID for
 > docker stop bdp-{service}-container
 > docker rm bdp-{service}-container
 > ```
+
+## Docker-Compose setup
+
+```bash
+docker-compose up --build
+```
+
+> &#x26a0;&#xfe0f; **IMPORTANT**: The Kafka topics must be created after the Kafka container has been started, but before the Spark container setup begins.
+
+1. **Change Working Directory to topic_creator:**
+   ```bash
+   cd ./topic_creator
+   ```
+1. **Run kafka_topic_creator python script**
+   ```bash
+   python ./kafka_topic_creator.py
+   ```
+
+> then use the message_producer script
+
+### Message Creation setup
+
+1. **Change Working Directory to message producer:**
+   ```bash
+   cd ./message_producer
+   ```
+2. **Run message_producer python script**
+   ```bash
+   python ./message_producer.py
+   ```
+
+## bibliography
+
+- [spark - kafka connection](https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html)
