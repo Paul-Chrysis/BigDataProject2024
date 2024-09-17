@@ -3,21 +3,34 @@ import time
 import pandas as pd
 from datetime import datetime, timedelta
 from kafka import KafkaProducer
+from kafka.errors import NoBrokersAvailable
 import schedule
+import time
 
-bootstrap_servers = 'localhost:9092'
+bootstrap_servers = 'bdp-kafka-container:9093'
 topic_name = 'vehicle_positions'
 interval_seconds = 5
 start_time = datetime.now()
 simulation_interval_time = 0
-file_path = '../sources/sorted_vehicles.csv'
+file_path = './sources/sorted_vehicles.csv'
 retries = 5 
 continue_message_sending = True 
+topic_created = False
 
-producer = KafkaProducer(
-    bootstrap_servers=bootstrap_servers,
-    value_serializer=lambda v: json.dumps(v).encode('utf-8')
-)
+
+while not topic_created:
+    time.sleep(5)
+    try:
+        producer = KafkaProducer(
+            bootstrap_servers=bootstrap_servers,
+            value_serializer=lambda v: json.dumps(v).encode('utf-8')
+        )
+        topic_created = True
+    except NoBrokersAvailable:
+        print(f"Kafka broker is not available. Trying again in 5 seconds")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
 
 def read_data_from_csv(file_path,time_frame):
     df = pd.read_csv(file_path)
@@ -30,6 +43,7 @@ def prepare_record(record, start_time):
     send_time = start_time + timedelta(seconds=t)
     prepared_record = {
         "name": record["name"],
+        "dn": record["dn"],
         "origin": record["orig"],
         "destination": record["dest"],
         "time": send_time.strftime("%d/%m/%Y %H:%M:%S"),

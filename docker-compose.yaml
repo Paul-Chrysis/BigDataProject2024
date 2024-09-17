@@ -26,6 +26,49 @@ services:
     networks:
       - bdp-network
 
+  kafka-topic-creator:
+    build:
+      context: ./topic_creator
+      dockerfile: dockerfile
+    container_name: bdp-kafka-topic-creator-container
+    depends_on:
+      - kafka
+    networks:
+      - bdp-network
+
+  kafka-producer:
+    build:
+      context: .
+      dockerfile: ./message_producer/dockerfile
+    container_name: bdp-kafka-message-producer-container
+    depends_on:
+      - kafka-topic-creator
+    networks:
+      - bdp-network
+    volumes:
+      - ./message_producer/message_producer.py:/app/message_producer.py
+      - ./sources/sorted_vehicles.csv:/app/sources/sorted_vehicles.csv
+
+  mongo:
+    build:
+      context: ./mongo
+      dockerfile: dockerfile
+    container_name: bdp-mongo-container
+    ports:
+      - "27017:27017"
+    networks:
+      - bdp-network
+
+  bdp-database-initializer:
+    build:
+      context: ./mongo_config
+      dockerfile: dockerfile
+    depends_on:
+      - mongo
+    container_name: bdp-database-initializer
+    networks:
+      - bdp-network
+
   spark:
     build:
       context: ./spark
@@ -33,6 +76,7 @@ services:
     container_name: bdp-spark-container
     depends_on:
       - kafka
+      - mongo
     volumes:
       - ./spark/spark_consumer/spark_consumer.py:/opt/spark-apps/spark_consumer.py
     networks:
