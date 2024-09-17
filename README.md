@@ -28,6 +28,8 @@ This project is developed for the Big Data Management Systems course at CEID for
 - wurstmeister/kafka:latest (Kafka)
 - confluentinc/cp-zookeeper:latest (Zookeeper)
 - bitnami/spark:latest (Spark)
+- python:3.9-slim
+- mongo:latest
 
 ## Tools used
 
@@ -43,6 +45,7 @@ This project is developed for the Big Data Management Systems course at CEID for
 - Jupyter (v2024.4.0)
 - Docker (v1.29.1)
 - Markdown All in One (v3.6.2)
+- Pymongo (v4.8.0)
 
 ## Project Requirements
 
@@ -100,15 +103,24 @@ This project is developed for the Big Data Management Systems course at CEID for
    docker run -d --name bdp-kafka-container --network bdp-network -p 9092:9092 -p 9093:9093 bdp-kafka
    ```
 
-### Topic Creation setup
+### Kafka Topic Creator setup
 
-1. **Change Working Directory to topic_creator:**
+1. **Change Working Directory to Topic Creator Directory:**
+
    ```bash
    cd ./topic_creator
    ```
-1. **Run kafka_topic_creator python script**
+
+2. **Build Docker Image:**
+
    ```bash
-   python ./kafka_topic_creator.py
+   docker build -t bdp-kafka-topic .
+   ```
+
+3. **Run Docker Container:**
+
+   ```bash
+   docker run -d --name bdp-kafka-topic-container --network bdp-network -p 9092:9092 -p 9093:9093 bdp-kafka-topic
    ```
 
 ### Spark setup
@@ -131,15 +143,64 @@ This project is developed for the Big Data Management Systems course at CEID for
    docker run -d --name bdp-spark-container --network bdp-network bdp-spark
    ```
 
-### Message Creation setup
+### Mongo setup
 
-1. **Change Working Directory to message producer:**
+1. **Change Working Directory to Mongo Directory:**
+
+   ```bash
+   cd ./mongo
+   ```
+
+2. **Build Docker Image:**
+
+   ```bash
+   docker build -t bdp-mongo .
+   ```
+
+3. **Run Docker Container:**
+
+   ```bash
+   docker run -d --name bdp-mongo-container --network bdp-network bdp-mongo
+   ```
+
+### Mongo-Config setup
+
+1. **Change Working Directory to mongo config Directory:**
+
+   ```bash
+   cd ./mongo_config
+   ```
+
+2. **Build Docker Image:**
+
+   ```bash
+   docker build -t bdp-mongo-config .
+   ```
+
+3. **Run Docker Container:**
+
+   ```bash
+   docker run -d --name bdp-mongo-config-container --network bdp-network bdp-mongo-config
+   ```
+
+### Message Producer setup
+
+1. **Change Working Directory to Message producer Directory:**
+
    ```bash
    cd ./message_producer
    ```
-2. **Run message_producer python script**
+
+2. **Build Docker Image:**
+
    ```bash
-   python ./message_producer.py
+   docker build -t bdp-message-producer .
+   ```
+
+3. **Run Docker Container:**
+
+   ```bash
+   docker run -d --name bdp-message-producer-container --network bdp-network bdp-message-producer
    ```
 
 ### Additional Tips
@@ -163,30 +224,7 @@ This project is developed for the Big Data Management Systems course at CEID for
 docker-compose up --build
 ```
 
-> &#x26a0;&#xfe0f; **IMPORTANT**: The Kafka topics must be created after the Kafka container has been started, but before the Spark container setup begins.
-
-1. **Change Working Directory to topic_creator:**
-   ```bash
-   cd ./topic_creator
-   ```
-1. **Run kafka_topic_creator python script**
-   ```bash
-   python ./kafka_topic_creator.py
-   ```
-
-> then use the message_producer script
-
-### Message Creation setup
-
-1. **Change Working Directory to message producer:**
-   ```bash
-   cd ./message_producer
-   ```
-2. **Run message_producer python script**
-   ```bash
-   python ./message_producer.py
-   ```
-
 ## bibliography
 
 - [spark - kafka connection](https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html)
+- [write to mongo](https://www.mongodb.com/docs/spark-connector/upcoming/streaming-mode/streaming-write/)
