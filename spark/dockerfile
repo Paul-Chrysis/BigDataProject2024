@@ -1,7 +1,5 @@
-FROM bitnami/spark:latest
-
-COPY ./spark_consumer/spark_consumer.py /opt/spark-apps/
+FROM bitnami/spark:3.5.1
 
 ENV SPARK_MODE=driver
 
-CMD ["spark-submit", "--packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,org.apache.kafka:kafka-clients:3.7.0", "/opt/spark-apps/spark_consumer.py"]
+CMD ["spark-submit", "--packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,org.apache.kafka:kafka-clients:3.7.0,org.mongodb.spark:mongo-spark-connector_2.12:10.4.0", "/opt/spark-apps/spark_consumer.py"]
